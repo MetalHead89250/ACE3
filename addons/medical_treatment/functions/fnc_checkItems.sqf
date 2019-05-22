@@ -1,6 +1,6 @@
 #include "script_component.hpp"
 /*
- * Author: KoffeinFlummi, commy2
+ * Author: KoffeinFlummi, commy2, SilentSpike
  * Replaces vanilla items with ACE ones.
  *
  * Arguments:
@@ -16,27 +16,22 @@ if (EGVAR(medical,convertItems) == 2) exitWith {};
 
 params ["_unit"];
 
-private _countFirstAidKit = [_unit, "FirstAidKit"] call EFUNC(common,getCountOfItem);
-_unit removeItems "FirstAidKit";
+// Item conversions are cached at preStart
+private _itemHash = uiNamespace getVariable QGVAR(replaceItems);
 
-private _countMedikit = [_unit, "Medikit"] call EFUNC(common,getCountOfItem);
-_unit removeItems "Medikit";
+private _replaceItem = {
+    private _itemCount = [_unit, _key] call EFUNC(common,getCountOfItem);
+    _unit removeItems _key;
 
-if (EGVAR(medical,convertItems) != 0) exitWith {};
+    if (EGVAR(medical,convertItems) != 0) exitWith {};
 
-for "_i" from 1 to _countFirstAidKit do {
-    _unit addItem "ACE_fieldDressing";
-    _unit addItem "ACE_packingBandage";
-    _unit addItem "ACE_morphine";
-    _unit addItem "ACE_tourniquet";
+    for "_i" from 1 to _itemCount do {
+        {
+            for "_j" from 1 to (_x select 1) do {
+                _unit addItem (_x select 0);
+            };
+        } forEach _value;
+    };
 };
 
-for "_i" from 1 to _countMedikit do {
-    _unit addItemToBackpack "ACE_fieldDressing";
-    _unit addItemToBackpack "ACE_packingBandage";
-    _unit addItemToBackpack "ACE_packingBandage";
-    _unit addItemToBackpack "ACE_epinephrine";
-    _unit addItemToBackpack "ACE_morphine";
-    _unit addItemToBackpack "ACE_salineIV_250";
-    _unit addItemToBackpack "ACE_tourniquet";
-};
+[_itemHash, _replaceItem] call CBA_fnc_hashEachPair;
