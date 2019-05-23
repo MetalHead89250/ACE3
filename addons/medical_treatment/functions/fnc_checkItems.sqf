@@ -21,15 +21,18 @@ private _itemHash = call (uiNamespace getVariable QGVAR(replaceItems));
 
 private _replaceItem = {
     private _itemCount = [_unit, _key] call EFUNC(common,getCountOfItem);
-    _unit removeItems _key;
 
-    if (EGVAR(medical,convertItems) != 0) exitWith {};
+    if (_itemCount > 0) then {
+        _unit removeItems _key;
 
-    {
-        for "_i" from 1 to ((_x select 1) * _itemCount) do {
-            _unit addItem (_x select 0);
-        };
-    } forEach _value;
+        if (EGVAR(medical,convertItems) != 0) exitWith {};
+
+        {
+            for "_i" from 1 to ((_x select 1) * _itemCount) do {
+                _unit addItem (_x select 0);
+            };
+        } forEach _value;
+    };
 };
 
 [_itemHash, _replaceItem] call CBA_fnc_hashEachPair;
