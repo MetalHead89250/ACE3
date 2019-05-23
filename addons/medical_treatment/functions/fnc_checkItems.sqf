@@ -25,13 +25,11 @@ private _replaceItem = {
 
     if (EGVAR(medical,convertItems) != 0) exitWith {};
 
-    for "_i" from 1 to _itemCount do {
-        {
-            for "_j" from 1 to (_x select 1) do {
-                _unit addItem (_x select 0);
-            };
-        } forEach _value;
-    };
+    {
+        for "_i" from 1 to ((_x select 1) * _itemCount) do {
+            _unit addItem (_x select 0);
+        };
+    } forEach _value;
 };
 
 [_itemHash, _replaceItem] call CBA_fnc_hashEachPair;
