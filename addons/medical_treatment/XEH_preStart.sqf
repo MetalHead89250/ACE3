@@ -9,4 +9,5 @@ private _itemHash = [] call CBA_fnc_hashCreate;
     [_itemHash, configName _x, getArray _x] call CBA_fnc_hashSet;
 } forEach configProperties [configFile >> QGVAR(replaceItems)];
 
-uiNamespace setVariable [QGVAR(replaceItems), _itemHash];
+// compileFinal for security
+uiNamespace setVariable [QGVAR(replaceItems), compileFinal str _itemHash];

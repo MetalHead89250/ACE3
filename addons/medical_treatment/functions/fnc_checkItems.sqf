@@ -16,8 +16,8 @@ if (EGVAR(medical,convertItems) == 2) exitWith {};
 
 params ["_unit"];
 
-// Item conversions are cached at preStart
-private _itemHash = uiNamespace getVariable QGVAR(replaceItems);
+// Item conversions are cached at preStart (compileFinal'd for security)
+private _itemHash = call (uiNamespace getVariable QGVAR(replaceItems));
 
 private _replaceItem = {
     private _itemCount = [_unit, _key] call EFUNC(common,getCountOfItem);
